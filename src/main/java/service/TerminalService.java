@@ -3,21 +3,23 @@ package service;
 import container.ComponentContainer;
 import dto.Terminal;
 import enums.TerminalStatus;
-
+import lombok.Setter;
+import repository.TerminalRepository;
+@Setter
 public class TerminalService {
-
+    private TerminalRepository terminalRepository;
     public void createTerminal(String number, String address) {
-        Terminal terminal = ComponentContainer.terminalRepository.getTerminalByNumber(number);
+        Terminal terminal = terminalRepository.getTerminalByNumber(number);
         ////checking
         if (terminal!=null){
             System.out.println("This terminal already exists");
             return;
         }
-        ComponentContainer.terminalRepository.createTerminal(number, address);
+        terminalRepository.createTerminal(number, address);
     }
 
     public void updateTerminalByNumber(String number, String address) {
-        Terminal terminal = ComponentContainer.terminalRepository.getTerminalByNumber(number);
+        Terminal terminal = terminalRepository.getTerminalByNumber(number);
         if (terminal == null||!terminal.getAddress().equals(address)) {
             System.out.println("Terminal not found");
         } else {
@@ -25,9 +27,9 @@ public class TerminalService {
             String newTerminalNum = ComponentContainer.stringScanner.next();
             System.out.print("Enter new TERMINAL address : ");
             String new_address = ComponentContainer.stringScanner.next();
-            Terminal terminal1 = ComponentContainer.terminalRepository.getTerminalByNumber(newTerminalNum);
+            Terminal terminal1 = terminalRepository.getTerminalByNumber(newTerminalNum);
             if (terminal1 == null || terminal1.getNumber().equals(number)) {
-                ComponentContainer.terminalRepository.updateTerminalByNumber(terminal, newTerminalNum, new_address);
+                terminalRepository.updateTerminalByNumber(terminal, newTerminalNum, new_address);
                 System.out.println("Successfully");
             } else {
                 System.out.println("This terminal already exists");
@@ -36,7 +38,7 @@ public class TerminalService {
     }
 
     public void changeTerminalStatus(String numCard, String address) {
-        Terminal terminal = ComponentContainer.terminalRepository.getTerminalByNumber(numCard);
+        Terminal terminal = terminalRepository.getTerminalByNumber(numCard);
         if (terminal == null||!terminal.getAddress().equals(address)) {
             System.out.println("Card not found");
         } else {
@@ -45,17 +47,17 @@ public class TerminalService {
             } else if (terminal.getStatus().equals(TerminalStatus.ACTIVE)) {
                 terminal.setStatus(TerminalStatus.BLOCK);
             }
-            ComponentContainer.terminalRepository.updateTerminalStatus(terminal);
+            terminalRepository.updateTerminalStatus(terminal);
 
         }
     }
 
     public void deleteTerminal(String numTerminal, String address) {
-        Terminal terminal = ComponentContainer.terminalRepository.getTerminalByNumber(numTerminal);
+        Terminal terminal = terminalRepository.getTerminalByNumber(numTerminal);
         if (terminal == null || (!terminal.getAddress().equals(address))) {
             System.out.println("Terminal not found");
             return;
         }
-        ComponentContainer.terminalRepository.deleteTerminal(terminal);
+        terminalRepository.deleteTerminal(terminal);
     }
 }

@@ -5,11 +5,27 @@ import dto.Card;
 import dto.Profile;
 import dto.Terminal;
 import dto.Transaction;
+import lombok.Setter;
+import repository.CardRepository;
+import repository.TerminalRepository;
+import repository.TransactionRepository;
+import service.CardService;
+import service.ProfileService;
+import service.TerminalService;
+import service.TransactionService;
 
 import java.util.List;
-
+@Setter
 
 public class AdminController {
+    private TransactionService transactionService;
+    private TransactionRepository transactionRepository;
+    private CardRepository cardRepository;
+    private ProfileService profileService;
+    private TerminalService terminalService;
+    private CardService cardService;
+    private TerminalRepository terminalRepository;
+
     public void start(Profile profile) {
         boolean admin = true;
         while (admin) {
@@ -148,7 +164,7 @@ public class AdminController {
     private void transactionByCard() {
         System.out.print("Enter Terminal number: ");
         String cardNum = ComponentContainer.stringScanner.next();
-        List<Transaction> transactionList = ComponentContainer.transactionService.transactionByCard(cardNum);
+        List<Transaction> transactionList = transactionService.transactionByCard(cardNum);
        if (!transactionList.isEmpty()){
            print(transactionList);
        }
@@ -158,7 +174,7 @@ public class AdminController {
     private void transactionByTerminal() {
         System.out.print("Enter Terminal number: ");
         String terminalNum = ComponentContainer.stringScanner.next();
-        List<Transaction> transactionList = ComponentContainer.transactionService.transactionByTerminal(terminalNum);
+        List<Transaction> transactionList = transactionService.transactionByTerminal(terminalNum);
         if (!transactionList.isEmpty()){
             print(transactionList);
         }
@@ -179,19 +195,19 @@ public class AdminController {
         String fromDate = ComponentContainer.stringScanner.next();
         System.out.print("Enter To  Date (yyyy-MM-dd : ");
         String toDate = ComponentContainer.stringScanner.next();
-        List<Transaction> transactionList = ComponentContainer.transactionService.intermediatePayment(fromDate, toDate);
+        List<Transaction> transactionList = transactionService.intermediatePayment(fromDate, toDate);
         print(transactionList);
     }
 
     private void paymentDay() {
         System.out.print("Enter Date (yyyy-MM-dd : ");
         String date = ComponentContainer.stringScanner.next();
-        List<Transaction> transactionList = ComponentContainer.transactionService.paymentDay(date);
+        List<Transaction> transactionList = transactionService.paymentDay(date);
         print(transactionList);
     }
 
     private void paymentCurrentDay() {
-        List<Transaction> transactionList = ComponentContainer.transactionRepository.paymentCurrentDay();
+        List<Transaction> transactionList = transactionRepository.paymentCurrentDay();
         print(transactionList);
     }
 
@@ -205,11 +221,11 @@ public class AdminController {
     }
 
     private void companyCardBalance() {
-        System.out.println(ComponentContainer.cardRepository.getCard(ComponentContainer.companyCard).getAmount());
+        System.out.println(cardRepository.getCard(ComponentContainer.companyCard).getAmount());
     }
 
     private void transactionListAllProfile() {
-        List<Transaction> transactionList = ComponentContainer.transactionRepository.transactionListAllProfile();
+        List<Transaction> transactionList =transactionRepository.transactionListAllProfile();
         print(transactionList);
     }
 
@@ -222,11 +238,11 @@ public class AdminController {
     private void changeProfileStatus() {
         System.out.print("Enter phone profile  : ");
         String phone = ComponentContainer.stringScanner.next();
-        ComponentContainer.profileService.changeProfileStatus(phone);
+        profileService.changeProfileStatus(phone);
     }
 
     private void profileList() {
-        List<Profile> profileList = ComponentContainer.profileService.profileList();
+        List<Profile> profileList =profileService.profileList();
         print(profileList);
     }
 
@@ -241,7 +257,7 @@ public class AdminController {
         String numTerminal = ComponentContainer.stringScanner.next();
         System.out.print("Enter address : ");
         String address = ComponentContainer.stringScanner.next();
-        ComponentContainer.terminalService.deleteTerminal(numTerminal, address);
+        terminalService.deleteTerminal(numTerminal, address);
 
     }
 
@@ -250,7 +266,7 @@ public class AdminController {
         String numTerminal = ComponentContainer.stringScanner.next();
         System.out.print("Enter address : ");
         String address = ComponentContainer.stringScanner.next();
-        ComponentContainer.terminalService.changeTerminalStatus(numTerminal, address);
+        terminalService.changeTerminalStatus(numTerminal, address);
     }
 
     private void updateTerminal() {
@@ -258,11 +274,11 @@ public class AdminController {
         String number = ComponentContainer.stringScanner.next();
         System.out.print("Enter terminal address  : ");
         String address = ComponentContainer.stringScanner.next();
-        ComponentContainer.terminalService.updateTerminalByNumber(number, address);
+        terminalService.updateTerminalByNumber(number, address);
     }
 
     private void terminalList() {
-        List<Terminal> cardList = ComponentContainer.terminalRepository.terminalList();
+        List<Terminal> cardList = terminalRepository.terminalList();
         print(cardList);
     }
 
@@ -271,7 +287,7 @@ public class AdminController {
         String number = ComponentContainer.stringScanner.next();
         System.out.print("Enter Terminal address : ");
         String address = ComponentContainer.stringScanner.next();
-        ComponentContainer.terminalService.createTerminal(number, address);
+        terminalService.createTerminal(number, address);
 
     }
 
@@ -289,7 +305,7 @@ public class AdminController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Enter exp_date  : ");
         String exp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.deleteCard(numCard, exp_date);
+        cardService.deleteCard(numCard, exp_date);
     }
 
     private void changeCardStatus() {
@@ -297,7 +313,7 @@ public class AdminController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Enter exp_date  : ");
         String exp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.changeCardStatus(numCard, exp_date);
+        cardService.changeCardStatus(numCard, exp_date);
 
     }
 
@@ -306,12 +322,12 @@ public class AdminController {
         String number = ComponentContainer.stringScanner.next();
         System.out.print("Enter exp_date  : ");
         String exp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.updateCardByNumber(number, exp_date);
+        cardService.updateCardByNumber(number, exp_date);
 
     }
 
     private void cardList() {
-        List<Card> cardList = ComponentContainer.cardRepository.cardList();
+        List<Card> cardList =cardRepository.cardList();
         print(cardList);
     }
 
@@ -320,7 +336,7 @@ public class AdminController {
         String number = ComponentContainer.stringScanner.next();
         System.out.print("Enter exp_date : ");
         String exp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.createCard(number, exp_date);
+        cardService.createCard(number, exp_date);
     }
 
     private void cardMenu() {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean name="profileService" class="service.ProfileService" >
+                <property name="profileRepository" ref="profileRepository"/>
+    </bean>
+
+    <bean name="profileRepository" class="repository.ProfileRepository"/>
+
+    <bean name="profileController" class="controller.ProfileController">
+                <property name="transactionRepository" ref="transactionRepository"/>
+                <property name="transactionService" ref="transactionService"/>
+                <property name="cardService" ref="cardService"/>
+    </bean>
+
+    <bean name="transactionRepository" class="repository.TransactionRepository"/>
+
+    <bean name="transactionService" class="service.TransactionService" >
+                <property name="terminalRepository" ref="terminalRepository"/>
+                <property name="transactionRepository" ref="transactionRepository"/>
+                <property name="cardRepository" ref="cardRepository"/>
+    </bean>
+
+    <bean name="terminalService" class="service.TerminalService" autowire="byName">
+                <property name="terminalRepository" ref="terminalRepository"/>
+    </bean>
+
+    <bean name="terminalRepository" class="repository.TerminalRepository"/>
+    <bean name="cardService" class="service.CardService" >
+                <property name="cardRepository" ref="cardRepository"/>
+                <property name="transactionRepository" ref="transactionRepository"/>
+    </bean>
+    <bean name="cardRepository" class="repository.CardRepository"/>
+    <bean name="dataBase" class="db.DataBase"/>
+
+
+    <!--   <bean name="con" class="container.ComponentContainer">-->
+    <!--       -->
+    <!--   </bean>-->
+
+    <bean name="mainController" class="controller.MainController">
+                <property name="profileService" ref="profileService"/>
+                <property name="profileRepository" ref="profileRepository"/>
+                <property name="profileController" ref="profileController"/>
+                <property name="adminController" ref="adminController"/>
+    </bean>
+
+    <bean name="adminController" class="controller.AdminController" >
+                <property name="terminalService" ref="terminalService"/>
+                <property name="transactionService" ref="transactionService"/>
+                <property name="transactionRepository" ref="transactionRepository"/>
+                <property name="cardRepository" ref="cardRepository"/>
+                <property name="cardService" ref="cardService"/>
+                <property name="terminalRepository" ref="terminalRepository"/>
+    </bean>
+</beans>

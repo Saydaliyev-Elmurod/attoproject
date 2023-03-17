@@ -4,10 +4,19 @@ import container.ComponentContainer;
 import dto.Card;
 import dto.Profile;
 import dto.Transaction;
+import lombok.Setter;
+import repository.TransactionRepository;
+import service.CardService;
+import service.TransactionService;
 
 import java.util.List;
 
+@Setter
 public class ProfileController {
+    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
+    private CardService cardService;
+
     public void start(Profile profile) {
         boolean b = true;
         while (b) {
@@ -45,15 +54,15 @@ public class ProfileController {
     }
 
     private void transactionList(Profile profile) {
-        List<Transaction> transactionList = ComponentContainer.transactionRepository.transactionList(profile);
+        List<Transaction> transactionList = transactionRepository.transactionList(profile);
         print(transactionList);
 
     }
 
     private void print(List<?> list) {
-        if (list!=null||list.size()>0){
+        if (list != null || list.size() > 0) {
             list.stream().forEach(System.out::println);
-        }else {
+        } else {
             System.out.println("Nothing not found");
         }
     }
@@ -63,7 +72,7 @@ public class ProfileController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Enter terminal number: ");
         String terminalNumber = ComponentContainer.stringScanner.next();
-        ComponentContainer.transactionService.transaction(profile, numCard, terminalNumber);
+        transactionService.transaction(profile, numCard, terminalNumber);
 
 
     }
@@ -73,7 +82,7 @@ public class ProfileController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Balance: ");
         Double amount = ComponentContainer.intScanner.nextDouble();
-        ComponentContainer.cardService.refill(profile, numCard, amount);
+        cardService.refill(profile, numCard, amount);
     }
 
     private void deleteCardUser(Profile profile) {
@@ -81,7 +90,7 @@ public class ProfileController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Enter card data : ");
         String cardExp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.deleteCardUser(profile, numCard, cardExp_date);
+        cardService.deleteCardUser(profile, numCard, cardExp_date);
     }
 
     private void changeCardStatus(Profile profile) {
@@ -89,11 +98,11 @@ public class ProfileController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Enter card data : ");
         String cardExp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.changeCardStatusUser(profile, numCard, cardExp_date);
+        cardService.changeCardStatusUser(profile, numCard, cardExp_date);
     }
 
     private void cardList(Profile profile) {
-        List<Card> cardList = ComponentContainer.cardService.cardListUser(profile);
+        List<Card> cardList = cardService.cardListUser(profile);
         print(cardList);
     }
 
@@ -102,7 +111,7 @@ public class ProfileController {
         String numCard = ComponentContainer.stringScanner.next();
         System.out.print("Enter card data : ");
         String cardExp_date = ComponentContainer.stringScanner.next();
-        ComponentContainer.cardService.addCard(profile, numCard, cardExp_date);
+        cardService.addCard(profile, numCard, cardExp_date);
     }
 
     private void userMenu() {

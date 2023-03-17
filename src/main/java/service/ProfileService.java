@@ -1,15 +1,15 @@
 package service;
 
-import container.ComponentContainer;
 import dto.Profile;
 import enums.Status;
+import lombok.Setter;
+import repository.ProfileRepository;
 import util.MD5;
 
 import java.util.List;
-
+@Setter
 public class ProfileService {
-
-
+    private ProfileRepository profileRepository;
     public void registration(String name,String surname,String phone,String password ) {
         //check
         if (password.length() < 6) {
@@ -17,7 +17,7 @@ public class ProfileService {
             return;
         }
         // bu profile oldin qoshilganmi yoqmi tekshiramiz phone unique bolishi kerak
-        Profile profile1 = ComponentContainer.profileRepository.getProfileByPhone(phone);
+        Profile profile1 = profileRepository.getProfileByPhone(phone);
 
         if (profile1 != null) {
             System.out.println("Bu numerdan allaqachon royxatdan otilgan");
@@ -28,7 +28,7 @@ public class ProfileService {
         profile.setName(name);
         profile.setSurname(surname);
         profile.setPhone(phone);
-        ComponentContainer.profileRepository.registration(profile);
+        profileRepository.registration(profile);
     }
 
     public Profile  login(String phone, String password) {
@@ -37,16 +37,16 @@ public class ProfileService {
             return null;
         }
         //.....
-        return ComponentContainer.profileRepository.login(phone,password);
+        return profileRepository.login(phone,password);
 
     }
 
     public List<Profile> profileList() {
-         return ComponentContainer.profileRepository.profileList();
+         return profileRepository.profileList();
     }
 
     public void changeProfileStatus(String phone) {
-        Profile profile = ComponentContainer.profileRepository.getProfileByPhone(phone);
+        Profile profile = profileRepository.getProfileByPhone(phone);
         if (profile==null){
             System.out.println("Profile not found");
             return;
@@ -56,7 +56,7 @@ public class ProfileService {
         }else if (profile.getStatus().equals(Status.BLOCK)){
             profile.setStatus(Status.ACTIVE);
         }
-        ComponentContainer.profileRepository.updateProfileStatus(profile);
+        profileRepository.updateProfileStatus(profile);
     }
 
 

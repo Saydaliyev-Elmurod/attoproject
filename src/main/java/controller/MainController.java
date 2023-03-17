@@ -5,10 +5,25 @@ import db.DataBase;
 import dto.Profile;
 import enums.Role;
 import enums.Status;
-
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import repository.ProfileRepository;
+import service.ProfileService;
+@Setter
+@Getter
 public class MainController {
+    private ProfileService profileService;
+    private ProfileRepository profileRepository;
+    private ProfileController profileController;
+    private AdminController adminController;
+
+
     public void start() {
-           DataBase.init();
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
+        DataBase dataBase = (DataBase) context.getBean("dataBase");
+        dataBase.init();
         while (true) {
             menu();
             int action = ComponentContainer.getAction();
@@ -37,7 +52,7 @@ public class MainController {
         System.out.print("Enter password >> ");
         String password = ComponentContainer.stringScanner.next();
 
-        ComponentContainer.profileService.registration(name,surname,phone,password);
+        profileService.registration(name, surname, phone, password);
 
     }
 
@@ -46,21 +61,21 @@ public class MainController {
         String phone = ComponentContainer.stringScanner.next();
         System.out.print("Enter password :");
         String password = ComponentContainer.stringScanner.next();
-        Profile profile = ComponentContainer.profileService.login(phone, password);
+        Profile profile = profileService.login(phone, password);
         if (profile == null) {
             System.out.println("password or login incorrect");
             return;
         }
-        if (profile.getStatus().equals(Status.BLOCK)){
+        if (profile.getStatus().equals(Status.BLOCK)) {
             System.out.println("PROFILE BLOCKED BY ADMINISTRATION");
             return;
         }
         if (profile.getRole().equals(Role.USER)) {
             profile.setStatus(Status.ACTIVE);
-            ComponentContainer.profileRepository.updateProfileStatus(profile);
-            ComponentContainer.profileController.start(profile);
+            profileRepository.updateProfileStatus(profile);
+            profileController.start(profile);
         } else if (profile.getRole().equals(Role.ADMIN)) {
-            ComponentContainer.adminController.start(profile);
+            adminController.start(profile);
         }
     }
 

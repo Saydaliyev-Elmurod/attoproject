@@ -5,7 +5,7 @@ import util.MD5;
 import java.sql.*;
 
 public class DataBase {
-    public static void init() {
+    public  void init() {
         initProfile();
         initAdmin("Elmurod","Saydaliev", MD5.getMd5Hash("222222"),"22");
         initCard();

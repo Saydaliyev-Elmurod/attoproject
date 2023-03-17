@@ -7,41 +7,50 @@ import dto.Terminal;
 import dto.Transaction;
 import enums.CardStatus;
 import enums.TerminalStatus;
+import lombok.Setter;
+import repository.CardRepository;
+import repository.TerminalRepository;
+import repository.TransactionRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Setter
 public class TransactionService {
+    private CardRepository cardRepository;
+    private TerminalRepository terminalRepository;
+    private TransactionRepository transactionRepository;
+
     public void transaction(Profile profile, String numCard, String terminalNumber) {
 
-        Card card = ComponentContainer.cardRepository.getCard(numCard);
+        Card card = cardRepository.getCard(numCard);
         if (card == null || !card.getProfile_id().equals(profile.getId())) {
             System.out.println("This card isn't your");
             return;
-        } else if (card.getStatus().equals(CardStatus.BLOCK)||card.getStatus().equals(CardStatus.ADMIN_BLOCK)) {
+        } else if (card.getStatus().equals(CardStatus.BLOCK) || card.getStatus().equals(CardStatus.ADMIN_BLOCK)) {
             System.out.println("This card blocked");
             return;
-        }else if (card.getAmount()<1400){
+        } else if (card.getAmount() < 1400) {
             System.out.println("Not enough money");
             return;
         }
-        Terminal terminal = ComponentContainer.terminalRepository.getTerminalByNumber(terminalNumber);
+        Terminal terminal = terminalRepository.getTerminalByNumber(terminalNumber);
         if (terminal == null) {
             System.out.println("Terminal not found");
             return;
-        }else if (terminal.getStatus().equals(TerminalStatus.BLOCK)){
+        } else if (terminal.getStatus().equals(TerminalStatus.BLOCK)) {
             System.out.println("This terminal doesn't work");
             return;
         }
         card.setAmount(card.getAmount() - ComponentContainer.amountPrice);
-        ComponentContainer.cardRepository.updateCardBalance(card);
+        cardRepository.updateCardBalance(card);
 
-        Card companyCard = ComponentContainer.cardRepository.getCard(ComponentContainer.companyCard);
+        Card companyCard = cardRepository.getCard(ComponentContainer.companyCard);
         companyCard.setAmount(companyCard.getAmount() + ComponentContainer.amountPrice);
-        ComponentContainer.cardRepository.updateCardBalance(companyCard);
+        cardRepository.updateCardBalance(companyCard);
 
-        ComponentContainer.transactionRepository.transaction(profile, card, terminal);
+        transactionRepository.transaction(profile, card, terminal);
 
 
     }
@@ -50,32 +59,32 @@ public class TransactionService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        return ComponentContainer.transactionRepository.paymentDay(localDate);
+        return transactionRepository.paymentDay(localDate);
     }
 
     public List<Transaction> intermediatePayment(String fromDate, String toDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateFrom = LocalDate.parse(fromDate, formatter);
         LocalDate dateTo = LocalDate.parse(toDate, formatter);
-        return ComponentContainer.transactionRepository.intermediatePayment(dateFrom, dateTo);
+        return transactionRepository.intermediatePayment(dateFrom, dateTo);
     }
 
     public List<Transaction> transactionByTerminal(String terminalNum) {
-        Terminal terminal = ComponentContainer.terminalRepository.getTerminalByNumber(terminalNum);
+        Terminal terminal = terminalRepository.getTerminalByNumber(terminalNum);
         if (terminal == null) {
             System.out.println("Terminal not found");
             return null;
         }
-        return ComponentContainer.transactionRepository.transactionByTerminal(terminal);
+        return transactionRepository.transactionByTerminal(terminal);
 
     }
 
     public List<Transaction> transactionByCard(String cardNum) {
-        Card card = ComponentContainer.cardRepository.getCard(cardNum);
+        Card card = cardRepository.getCard(cardNum);
         if (card == null) {
             System.out.println("Card not found");
             return null;
         }
-        return ComponentContainer.transactionRepository.transactionByCard(card);
+        return transactionRepository.transactionByCard(card);
     }
 }
