@@ -6,57 +6,57 @@
 http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
-    <!--    <context:component-scan base-package="java"/>-->
-    <bean name="profileService" class="service.ProfileService" autowire="byName">
-        <!--                <property name="profileRepository" ref="profileRepository"/>-->
-    </bean>
+<!--        <context:component-scan base-package="java"/>-->
+<!--    <bean name="profileService" class="org.example.service.ProfileService" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="profileRepository" ref="profileRepository"/>&ndash;&gt;-->
+<!--    </bean>-->
 
-    <bean name="profileRepository" class="repository.ProfileRepository" autowire="byName"/>
+<!--    <bean name="profileRepository" class="org.example.repository.ProfileRepository" autowire="byName"/>-->
 
-    <bean name="profileController" class="controller.ProfileController" autowire="byName">
-        <!--                <property name="transactionRepository" ref="transactionRepository"/>-->
-        <!--                <property name="transactionService" ref="transactionService"/>-->
-        <!--                <property name="cardService" ref="cardService"/>-->
-    </bean>
+<!--    <bean name="profileController" class="org.example.controller.ProfileController" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="transactionRepository" ref="transactionRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="transactionService" ref="transactionService"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="cardService" ref="cardService"/>&ndash;&gt;-->
+<!--    </bean>-->
 
-    <bean name="transactionRepository" class="repository.TransactionRepository"/>
+<!--    <bean name="transactionRepository" class="org.example.repository.TransactionRepository"/>-->
 
-    <bean name="transactionService" class="service.TransactionService" autowire="byName">
-        <!--                <property name="terminalRepository" ref="terminalRepository"/>-->
-        <!--                <property name="transactionRepository" ref="transactionRepository"/>-->
-        <!--                <property name="cardRepository" ref="cardRepository"/>-->
-    </bean>
+<!--    <bean name="transactionService" class="org.example.service.TransactionService" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="terminalRepository" ref="terminalRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="transactionRepository" ref="transactionRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="cardRepository" ref="cardRepository"/>&ndash;&gt;-->
+<!--    </bean>-->
 
-    <bean name="terminalService" class="service.TerminalService" autowire="byName">
-        <!--                <property name="terminalRepository" ref="terminalRepository"/>-->
-    </bean>
+<!--    <bean name="terminalService" class="org.example.service.TerminalService" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="terminalRepository" ref="terminalRepository"/>&ndash;&gt;-->
+<!--    </bean>-->
 
-    <bean name="terminalRepository" class="repository.TerminalRepository"/>
-    <bean name="cardService" class="service.CardService" autowire="byName">
-        <!--                <property name="cardRepository" ref="cardRepository"/>-->
-        <!--                <property name="transactionRepository" ref="transactionRepository"/>-->
-    </bean>
-    <bean name="cardRepository" class="repository.CardRepository"/>
-    <bean name="dataBase" class="db.DataBase"/>
+<!--    <bean name="terminalRepository" class="org.example.repository.TerminalRepository"/>-->
+<!--    <bean name="cardService" class="org.example.service.CardService" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="cardRepository" ref="cardRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="transactionRepository" ref="transactionRepository"/>&ndash;&gt;-->
+<!--    </bean>-->
+<!--    <bean name="cardRepository" class="org.example.repository.CardRepository"/>-->
+<!--    <bean name="dataBase" class="org.example.db.DataBase"/>-->
 
 
-    <!--   <bean name="con" class="container.ComponentContainer">-->
-    <!--       -->
-    <!--   </bean>-->
+<!--    &lt;!&ndash;   <bean name="con" class="org.example.container.ComponentContainer">&ndash;&gt;-->
+<!--    &lt;!&ndash;       &ndash;&gt;-->
+<!--    &lt;!&ndash;   </bean>&ndash;&gt;-->
 
-    <bean name="mainController" class="controller.MainController" autowire="byName">
-        <!--                <property name="profileService" ref="profileService"/>-->
-        <!--                <property name="profileRepository" ref="profileRepository"/>-->
-        <!--                <property name="profileController" ref="profileController"/>-->
-        <!--                <property name="adminController" ref="adminController"/>-->
-    </bean>
+<!--    <bean name="mainController" class="org.example.controller.MainController" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="profileService" ref="profileService"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="profileRepository" ref="profileRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="profileController" ref="profileController"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="adminController" ref="adminController"/>&ndash;&gt;-->
+<!--    </bean>-->
 
-    <bean name="adminController" class="controller.AdminController" autowire="byName">
-        <!--                <property name="terminalService" ref="terminalService"/>-->
-        <!--                <property name="transactionService" ref="transactionService"/>-->
-        <!--                <property name="transactionRepository" ref="transactionRepository"/>-->
-        <!--                <property name="cardRepository" ref="cardRepository"/>-->
-        <!--                <property name="cardService" ref="cardService"/>-->
-        <!--                <property name="terminalRepository" ref="terminalRepository"/>-->
-    </bean>
+<!--    <bean name="adminController" class="org.example.controller.AdminController" autowire="byName">-->
+<!--        &lt;!&ndash;                <property name="terminalService" ref="terminalService"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="transactionService" ref="transactionService"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="transactionRepository" ref="transactionRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="cardRepository" ref="cardRepository"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="cardService" ref="cardService"/>&ndash;&gt;-->
+<!--        &lt;!&ndash;                <property name="terminalRepository" ref="terminalRepository"/>&ndash;&gt;-->
+<!--    </bean>-->
 </beans>
