@@ -263,7 +263,7 @@ public class AdminController {
     }
 
     private void deleteTerminal() {
-        System.out.print("Enter TERMINAL card :");
+        System.out.print("Enter TERMINAL number :");
         String numTerminal = ComponentContainer.stringScanner.next();
         System.out.print("Enter address : ");
         String address = ComponentContainer.stringScanner.next();

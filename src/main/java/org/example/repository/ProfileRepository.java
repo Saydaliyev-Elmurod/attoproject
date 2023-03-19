@@ -4,6 +4,9 @@ import org.example.db.DataBase;
 import org.example.dto.Profile;
 import org.example.enums.Role;
 import org.example.enums.Status;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.example.util.MD5;
 
@@ -13,78 +16,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+
 @Repository
 
 public class ProfileRepository {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public void registration(Profile profile) {
         String sql = "insert into profile(name,surname,phone,password) " +
                 "values(?,?,?,?)";
-        try {
-            Connection connection = DataBase.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-
-            statement.setString(1, profile.getName());
-            statement.setString(2, profile.getSurname());
-            statement.setString(3, profile.getPhone());
-            statement.setString(4, profile.getPassword());
-            int n = statement.executeUpdate();
-            if (n == 1) {
-                System.out.println("Successfully");
-            }
-            connection.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(sql, profile.getName(), profile.getSurname(), profile.getPhone(), profile.getPassword());
     }
 
     public Profile getProfileByPhone(String phone) {
         String sql = "select * from profile " +
                 "where phone = ?";
-        try {
-            Connection connection = DataBase.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, phone);
-            ResultSet set = statement.executeQuery();
-            List<Profile> profileList = getProfileByResultSet(set);
-            if (profileList.size()==1){
-                return profileList.get(0);
-            }
-            connection.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Profile> profileList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Profile.class), phone);
+        if (profileList.isEmpty()) {
+            return null;
         }
-        return null;
-
-
+        return profileList.get(0);
     }
-
-    private List<Profile> getProfileByResultSet(ResultSet set) {
-        List<Profile> profileList = new LinkedList<>();
-        try {
-            while (set.next()) {
-                Profile profile = new Profile();
-                profile = new Profile();
-                profile.setId(set.getInt("id"));
-                profile.setName(set.getString("name"));
-                profile.setSurname(set.getString("surname"));
-                profile.setPhone(set.getString("phone"));
-                profile.setPassword(set.getString("password"));
-                profile.setLocalDateTime(set.getTimestamp("created_date").toLocalDateTime());
-                profile.setRole(Role.valueOf(set.getString("role")));
-                profile.setStatus(Status.valueOf(set.getString("status")));
-                profileList.add(profile);
-            }
-            return profileList;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     public Profile login(String phone, String password) {
         Profile profile = getProfileByPhone(phone);
@@ -97,35 +50,13 @@ public class ProfileRepository {
 
     public List<Profile> profileList() {
         String sql = "select * from profile ";
-        List<Profile> profileList = new LinkedList<>();
-        try {
-            Connection connection = DataBase.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet set = statement.executeQuery();
-            profileList = getProfileByResultSet(set);
-            connection.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return profileList;
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Profile.class));
     }
 
     public void updateProfileStatus(Profile profile) {
         String sql = "update   profile " +
                 "set status = ? " +
                 "where phone = ? and password =?";
-        try {
-            Connection connection = DataBase.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, profile.getStatus().name());
-            statement.setString(2, profile.getPhone());
-            statement.setString(3, profile.getPassword());
-            statement.executeUpdate();
-            connection.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        jdbcTemplate.update(sql, profile.getStatus().name(), profile.getPhone(), profile.getPassword());
     }
 }

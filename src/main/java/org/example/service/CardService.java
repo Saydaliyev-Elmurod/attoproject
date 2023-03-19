@@ -12,6 +12,7 @@ import org.example.repository.TransactionRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Setter
 @Service
 public class CardService {
@@ -28,7 +29,7 @@ public class CardService {
             return;
         }
         //>>>>>>
-       cardRepository.createCard(number, exp_date);
+        cardRepository.createCard(number, exp_date);
     }
 
     public void updateCardByNumber(String number, String exp_date) {
@@ -84,6 +85,8 @@ public class CardService {
         if (card == null || !card.getExp_date().equals(cardExpDate)) {
             System.out.println("Card not found");
             return;
+        } else if (card.getProfile_id() == null) {
+            cardRepository.addCardToUser(profile, card);
         } else if (card.getProfile_id() != profile.getId() && card.getProfile_id() != 0) {
             System.out.println("This card belong other profile");
             return;
@@ -100,7 +103,7 @@ public class CardService {
                 card.setStatus(CardStatus.ACTIVE);
             } else if (card.getStatus().equals(CardStatus.ACTIVE)) {
                 card.setStatus(CardStatus.BLOCK);
-            }else if (card.getStatus().equals(CardStatus.ADMIN_BLOCK)){
+            } else if (card.getStatus().equals(CardStatus.ADMIN_BLOCK)) {
                 System.out.println("This card blocked by admin ,you cannot activated");
                 return;
             }
@@ -110,7 +113,7 @@ public class CardService {
     }
 
     public void deleteCardUser(Profile profile, String numCard, String cardExpDate) {
-        Card card =cardRepository.getCard(numCard);
+        Card card = cardRepository.getCard(numCard);
         if (card == null || !card.getExp_date().equals(cardExpDate) || !card.getProfile_id().equals(profile.getId())) {
             System.out.println("Your Card  not found");
         } else {
@@ -124,12 +127,12 @@ public class CardService {
         Card card = cardRepository.getCard(numCard);
         if (card == null || !card.getProfile_id().equals(profile.getId())) {
             System.out.println("Your Card  not found");
-        } else if (card.getStatus().equals(CardStatus.BLOCK)||card.getStatus().equals(CardStatus.ADMIN_BLOCK)) {
+        } else if (card.getStatus().equals(CardStatus.BLOCK) || card.getStatus().equals(CardStatus.ADMIN_BLOCK)) {
             System.out.println("This card blocked ");
         } else {
             card.setAmount(card.getAmount() + amount);
             cardRepository.updateCardBalance(card);
-            transactionRepository.refill(profile,card,amount);
+            transactionRepository.refill(profile, card, amount);
 
         }
     }
